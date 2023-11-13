@@ -40,6 +40,7 @@ const validateToken = (req, res, next) => {
 };
 
 module.exports = { validateToken };
+
 // ///////////////////////////////////////////////////////////////////
 //con la verificacoin de abajo dejas todo libre para acceder a distintas rutas y ya no obtienes el error user not logged in
 // const { verify } = require("jsonwebtoken");

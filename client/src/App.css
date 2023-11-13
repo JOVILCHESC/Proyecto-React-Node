@@ -1,3 +1,10 @@
+/* Reinicio de márgenes y relleno */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
 /* Estilo para el contenedor principal */
 .App {
   box-sizing: content-box;
@@ -5,12 +12,40 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-radius: 10px ;
-  height: 938px;
-  background-image: linear-gradient(135deg,#00B7D4,#505488,#2F3F80,#235a82,#69a3e1);
-  background-size: 500%;
-  animation: fondo 10s infinite;
+  border-radius: 0px;
+  min-height: 100vh; /* Usa la altura mínima del viewport completo */
+  overflow: hidden; /* Oculta cualquier desbordamiento del contenido */
+  background-image: linear-gradient(135deg, rgb(129, 133, 137), #3a44d8, #2787a7, #1e2830, #65abf6);
+  background-size: 300% 300%; /* Ajusta el tamaño del fondo */
+  animation: fondo 20s linear infinite;
 }
+
+/* Resto de tu CSS sigue igual */
+
+/*animacion para fondo de aplicación */
+@keyframes fondo {
+  0% {
+    background-position: 0% 0%; /* Comienza desde la esquina superior izquierda */
+  }
+  100% {
+    background-position: 100% 100%; /* Termina en la esquina inferior derecha */
+  }
+}
+
+
+/* Resto de tu CSS sigue igual */
+
+/*animacion para fondo de aplicación */
+@keyframes fondo {
+  0% {
+    background-position: 0% 0%; /* Comienza desde la esquina superior izquierda */
+  }
+  100% {
+    background-position: 100% 100%; /* Termina en la esquina inferior derecha */
+  }
+}
+
+
 
 /* Estilo para el contenedir de usuarios y solicitantes*/
 .app{
@@ -70,7 +105,7 @@
 .navbar {
   background-color: #113255; /* Color de fondo */
   color: white; /* Color del texto */
-  padding: 10px; /* Espaciado interior */
+  padding: 15px; /* Espaciado interior */
   display: flex; /* Mostrar elementos en línea */
   width: 100%;
   justify-content: space-around; /* Distribuir elementos horizontalmente */

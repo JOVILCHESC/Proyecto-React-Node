@@ -1,0 +1,50 @@
+/* Estilo para el contenedor principal de la vista de CV */
+.app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    border-radius: 10px;
+    background-color: #a4bec28c;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0), 0 6px 20px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  }
+  
+  .app h2 {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  }
+  
+  /* Estilo para cada elemento de solicitante (formApplicant) */
+  .formApplicant {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px;
+    width: 300px;
+    background-color: #f9f9f9;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    cursor: pointer; /* Cambia el cursor al pasar sobre un elemento */
+  }
+  
+  /* Estilo para los detalles del solicitante (applicants) */
+  .applicants {
+    margin-bottom: 5px;
+  }
+  
+  /* Estilo para cada campo del solicitante (jobTitle, company, description, etc.) */
+  .jobTitle, .company, .description, .education, .yearsExperience, .certifications, .technicalSkills {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  /* Estilo para los campos de habilidades técnicas (technicalSkills) */
+  .technicalSkills {
+    font-weight: normal;
+  }
+  
+  /* Cambio del cursor al pasar sobre un elemento */
+  .formApplicant:hover {
+    background-color: #e0e0e0; /* Cambia el fondo al pasar el ratón */
+    transition: background-color 0.3s; /* Agrega una transición suave */
+  }
+  

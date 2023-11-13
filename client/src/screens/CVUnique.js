@@ -20,36 +20,36 @@ const CVUnique = () => {
   return (
     <div className={styles.CVUniqueContainer}>
       <div className={styles.CVField}>
-        <label>Job Title:</label>
+        <label>Nombre Completo:</label>
         <div>{uniqueCV.jobTitle}</div>
       </div>
       <div className={styles.CVField}>
-        <label>Company:</label>
+        <label>Gmail:</label>
         <div>{uniqueCV.company}</div>
       </div>
       <div className={styles.CVField}>
-        <label>Description:</label>
+        <label>Descripcion:</label>
         <div className={styles.CVDescription}>{uniqueCV.description}</div>
       </div>
       
       <div className={styles.CVField}>
-        <label>Education:</label>
+        <label>Educacion:</label>
         <div className={styles.CVLargeText}>{uniqueCV.education}</div>
       </div>
       <div className={styles.CVField}>
-        <label>Years of Experience:</label>
+        <label>Años de experiencia:</label>
         <div>{uniqueCV.yearsExperience}</div>
       </div>
       <div className={styles.CVField}>
-        <label>Language Skills:</label>
+        <label>Idiomas:</label>
         <div>{uniqueCV.languageSkills}</div>
       </div>
       <div className={styles.CVField}>
-        <label>Certifications:</label>
+        <label>Certificaciones:</label>
         <div>{uniqueCV.certifications}</div>
       </div>
       <div className={styles.CVField}>
-        <label>Technical Skills:</label>
+        <label>Habilidades Blandas:</label>
         <div>{uniqueCV.technicalSkills}</div>
       </div>
     </div>

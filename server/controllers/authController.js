@@ -42,3 +42,26 @@ exports.loginUser = async (req, res) => {
   }
 };
 
+
+//obtener a un usuario
+// userController.js
+exports.getUserById = async (req, res) => {
+  const { utenteId } = req.params;
+
+  try {
+    const user = await Utente.findByPk(utenteId);
+    if (!user) {
+      return res.status(404).json({ error: "User Not Found" });
+    }
+
+    res.json({
+      id: user.id,
+      username: user.username,
+      role: user.role,
+      // Agrega más campos según sea necesario
+    });
+  } catch (error) {
+    console.error("Error al obtener información del usuario", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};

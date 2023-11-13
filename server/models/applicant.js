@@ -117,6 +117,10 @@ module.exports = (sequelize, DataTypes) => {
     technicalSkills: {
       type: DataTypes.TEXT, // Habilidades técnicas (programación, diseño, etc.).
     },
+    cvFile: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     // Otros campos puntuables (agrega más según sea necesario).
   });
 
@@ -131,9 +135,10 @@ module.exports = (sequelize, DataTypes) => {
     models.Applicant.belongsTo(models.Utente, {
       foreignKey: 'utenteId', // El nombre de la columna en Applicant que hace referencia a Utente
     });
-
-    // Asociación con User
-    models.Applicant.belongsTo(models.User);
+    //soaciacion con postulation
+    models.Applicant.hasMany(models.Postulation, {
+      foreignKey: 'applicantId',
+    });
   };
   return Applicant;
 };

@@ -98,6 +98,7 @@ import Home from './screens/Home';
 import CVRegistration from './screens/CVRegistration';
 import CVUnique from './screens/CVUnique';
 import { AuthContext } from './helpers/newAuthContext';
+import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Login from './components/Login';
@@ -113,14 +114,18 @@ import PunctuationCalculator from './screens/Punctuation';
 import RequestScores from './screens/RequestScores';
 import Postulation from './screens/Postulation';
 import ViewCv from './screens/ViewCv'
-
+import PonderationList from './screens/PonderationList'
 function App() {
+
+  const { requestId } = useParams(); // Obtener 'requestId' de los parámetros de la URL
+
   const [authState, setAuthState] = useState({
     username: '',
     id: 0,
-    status: false,
+    status: 'registered',
     role: '', // Agrega el campo de rol al estado
   });
+  
 
   useEffect(() => {
     axios
@@ -130,19 +135,23 @@ function App() {
         },
       })
       .then((response) => {
-        if (response.data.error) {
-          setAuthState({ ...authState, status: false });
-        } else {
+        if (response.status === 200) {
           setAuthState({
             username: response.data.username,
             id: response.data.id,
-            status: true,
-            role: response.data.role, // Agrega el campo de rol al estado
+            status: 'registered',
+            role: response.data.role,
           });
+        } else {
+          setAuthState({ ...AuthContext });
         }
+      })
+      .catch((error) => {
+        console.error('Error al obtener información de autenticación:', error);
+        setAuthState({ ...AuthContext });
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  
 
   const logout = () => {
     localStorage.removeItem('accessToken');
@@ -154,7 +163,10 @@ function App() {
       <AuthContext.Provider value={{ authState, setAuthState }}>
         <Router>
         <div className="navbar">
+
   <Link to="/">Empleos Disponibles</Link>
+  {requestId && <Link to={`/ponderation-list/${requestId}`}>Ver Lista</Link>}
+
   {authState.status && authState.role === 'user' && (
     <Link to="/CVRegister">Crear Curriculum</Link>
   )}
@@ -193,7 +205,7 @@ function App() {
   )}
 
   
-</div>
+    </div>
 
           <div className="loggedInContainer">
             <h1>{authState.username}</h1>
@@ -201,7 +213,6 @@ function App() {
           </div>
           <div>
             <Routes>
-              
               <Route path="/" element={<Home />} />
               <Route path="/home" element={<Home />} />
               <Route path="/CVRegister" element={<CVRegistration />} />
@@ -221,6 +232,8 @@ function App() {
               <Route path="/calculate-scores" element={<RequestScores />} />
               <Route path="/postulation" element={<Postulation />} />
               <Route path="/ViewCv" element={<ViewCv />} />
+              <Route path="/ponderation-list/:requestId" element={<PonderationList />} />
+
             </Routes>
           </div>
         </Router>

@@ -3,9 +3,15 @@ module.exports = (sequelize, DataTypes) => {
       // Puedes agregar campos adicionales según tus necesidades
       totalScore: {
         type: DataTypes.INTEGER, // Esto podría ser el puntaje de la postulación
-        allowNull: false,
+        allowNull: true,
+      },
+      
+      ponderacion: {
+        type: DataTypes.FLOAT, // Ajusta el tipo de dato según tus necesidades
+        allowNull: true,
       },
     });
+    
   
     // Asociaciones con otros modelos
     Postulation.associate = (models) => {

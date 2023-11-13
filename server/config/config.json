@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "rockyONE",
-    "database": "sistema_reemplazo",
+    "database": "proyecto_ejemplo",
     "host": "localhost",
     "dialect": "mysql"
   },

@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         defaultValue: "utente", // Valor predeterminado como "user"
       },
+      status: {
+        type: DataTypes.STRING, // O el tipo de datos adecuado para tu caso
+        defaultValue: "registered",
+      },
     });
   
     return Utente;

@@ -54,8 +54,10 @@ const { validateToken } = require("../middlewares/newAuthMiddleware");
 
 router.post("/register", authController.registerUser);
 router.post("/login", authController.loginUser);
+router.get("/usuario/:utenteId", authController.getUserById);
 router.get("/auth", validateToken, (req, res) => {
   res.json(req.user);
 });
+
 
 module.exports = router;

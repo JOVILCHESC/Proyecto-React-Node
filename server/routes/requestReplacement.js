@@ -46,5 +46,12 @@ router.get("/ByID/:id", requestReplacementController.getRequestReplacementById);
 router.post("/", requestReplacementController.createRequestReplacement);
 
 // Puedes agregar otras rutas relacionadas con las solicitudes de reemplazo, como actualizar, eliminar, etc., según tus necesidades.
+// Nueva ruta para eliminar una solicitud de reemplazo por su ID
+router.delete("/:id", requestReplacementController.deleteRequestReplacementById);
+
+// Nueva ruta para actualizar una solicitud de reemplazo por su ID
+router.put("/:id", requestReplacementController.updateRequestReplacementById);
+//obtener postulantes asociados a la solicitud de reemplazo
+router.get('/postulantes/:requestId', requestReplacementController.obtenerPostulantesPorSolicitud);
 
 module.exports = router;

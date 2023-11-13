@@ -41,7 +41,13 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
     });
-  
+    
+    // Asociaciones con otros modelos
+    RequestReplacement.associate = (models) => {
+      models.RequestReplacement.hasMany(models.Postulation, {
+        foreignKey: 'requestId',
+      });
+    };
     return RequestReplacement;
   };
   

@@ -1,88 +1,5 @@
-const { Applicant } = require("../models");
+// const { Applicant } = require("../models");
 
-// // Controlador para obtener todos los solicitantes
-// exports.getAllApplicants = async (req, res) => {
-//   try {
-//     const applicants = await Applicant.findAll();
-//     res.json(applicants);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Error al obtener solicitantes" });
-//   }
-// };
-
-// // Controlador para obtener un solicitante por su ID (o curriculum, según tu comentario)
-// exports.getApplicantById = async (req, res) => {
-//   const id = req.params.id;
-
-//   try {
-//     const applicant = await Applicant.findByPk(id);
-//     if (!applicant) {
-//       return res.status(404).json({ error: "Solicitante no encontrado" });
-//     }
-//     res.json(applicant);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Error al obtener solicitante por ID" });
-//   }
-// };
-
-
-
-// // Controlador para registrar un nuevo solicitante
-// exports.createApplicant = async (req, res) => {
-//   const applicantData = req.body;
-
-//   try {
-//     const newApplicant = await Applicant.create(applicantData);
-//     res.status(201).json(newApplicant);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Error al registrar solicitante" });
-//   }
-// };
-
-
-// // Controlador para actualizar un solicitante por su ID
-// exports.updateApplicantById = async (req, res) => {
-//   const id = req.params.id;
-//   const updatedData = req.body;
-
-//   try {
-//     const applicant = await Applicant.findByPk(id);
-//     if (!applicant) {
-//       return res.status(404).json({ error: "Solicitante no encontrado" });
-//     }
-//     await applicant.update(updatedData);
-//     res.json(applicant);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Error al actualizar solicitante por ID" });
-//   }
-// };
-
-// // Controlador para eliminar un solicitante por su ID
-// exports.deleteApplicantById = async (req, res) => {
-//   const id = req.params.id;
-
-//   try {
-//     const applicant = await Applicant.findByPk(id);
-//     if (!applicant) {
-//       return res.status(404).json({ error: "Solicitante no encontrado" });
-//     }
-//     await applicant.destroy();
-//     res.json({ message: "Solicitante eliminado con éxito" });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Error al eliminar solicitante por ID" });
-//   }
-// };
-
-
-//==============================================================
-// los controladores de abajo son los que se agregaron para poder ligar user y curriculum
-
-// Controlador para crear un solicitante (currículum) protegido por autenticación(especifico)
 // exports.createApplicant = async (req, res) => {
 //   const userId = req.user.id;
 //   const applicantData = req.body;
@@ -92,7 +9,9 @@ const { Applicant } = require("../models");
 //     const existingApplicant = await Applicant.findOne({ where: { utenteId: userId } });
 
 //     if (existingApplicant) {
-//       return res.status(400).json({ error: 'El usuario ya tiene un currículum.' });
+//       // El usuario ya tiene un currículum, actualízalo en lugar de crear uno nuevo
+//       await existingApplicant.update(applicantData);
+//       return res.status(200).json(existingApplicant);
 //     }
 
 //     // Si el usuario no tiene un currículum, crea uno
@@ -100,13 +19,20 @@ const { Applicant } = require("../models");
 //     res.status(201).json(newApplicant);
 //   } catch (error) {
 //     console.error(error);
-//     res.status(500).json({ error: "Error al registrar curriculum" });
+//     res.status(500).json({ error: "Error al registrar currículum" });
 //   }
-// }
+// };
+const { Applicant } = require("../models");
+const multer = require('multer');
+
+// Configurar multer para manejar la carga de archivos
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 exports.createApplicant = async (req, res) => {
   const userId = req.user.id;
   const applicantData = req.body;
+  const pdfFile = req.file; // Archivo PDF adjunto
 
   try {
     // Verificar si el usuario ya tiene un currículum
@@ -119,7 +45,14 @@ exports.createApplicant = async (req, res) => {
     }
 
     // Si el usuario no tiene un currículum, crea uno
-    const newApplicant = await Applicant.create({ ...applicantData, utenteId: userId });
+    const newApplicantData = { ...applicantData, utenteId: userId };
+
+    if (pdfFile) {
+      // Si hay un archivo PDF adjunto, guárdalo en el currículum
+      newApplicantData.cvFile = pdfFile.buffer.toString('base64');
+    }
+
+    const newApplicant = await Applicant.create(newApplicantData);
     res.status(201).json(newApplicant);
   } catch (error) {
     console.error(error);
@@ -127,59 +60,9 @@ exports.createApplicant = async (req, res) => {
   }
 };
 
+// Middleware para manejar la carga de archivos PDF
+exports.uploadPdf = upload.single('cvFile');
 
-// // Controlador para registrar un nuevo solicitante(original)
-// exports.createApplicant = async (req, res) => {
-//   const applicantData = req.body;
-
-//   try {
-//     const newApplicant = await Applicant.create(applicantData);
-//     res.status(201).json(newApplicant);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Error al registrar solicitante" });
-//   }
-// };
-
-
-
-// // Controlador para obtener un currículum por su ID(mas especifico)
-// exports.getApplicantById = async (req, res) => {
-//   const id = req.params.id;
-
-//   try {
-//     const applicant = await Applicant.findByPk(id);
-//     if (!applicant) {
-//       return res.status(404).json({ error: "Currículum no encontrado" });
-//     }
-
-//     // Verifica que el usuario actual sea el propietario del currículum
-//     if (applicant.utenteId !== req.utente.id) {
-//       return res.status(403).json({ error: "Acceso no autorizado" });
-//     }
-
-//     res.json(applicant);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Error al obtener currículum por ID" });
-//   }
-// }
-
-// // Controlador para obtener un solicitante por su ID (o curriculum, original)
-// exports.getApplicantById = async (req, res) => {
-//   const id = req.params.id;
-
-//   try {
-//     const applicant = await Applicant.findByPk(id);
-//     if (!applicant) {
-//       return res.status(404).json({ error: "Solicitante no encontrado" });
-//     }
-//     res.json(applicant);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Error al obtener solicitante por ID" });
-//   }
-// };
 
 // Controlador para obtener todos los solicitantes
 exports.getAllApplicants = async (req, res) => {
@@ -192,53 +75,6 @@ exports.getAllApplicants = async (req, res) => {
   }
 };
 
-// // Controlador para actualizar un currículum por su ID
-// exports.updateApplicantById = async (req, res) => {
-//   const id = req.params.id;
-//   const updatedData = req.body;
-
-//   try {
-//     const applicant = await Applicant.findByPk(id);
-//     if (!applicant) {
-//       return res.status(404).json({ error: "Currículum no encontrado" });
-//     }
-
-//     // Verifica que el usuario actual sea el propietario del currículum
-//     if (applicant.utenteId !== req.utente.id) {
-//       return res.status(403).json({ error: "Acceso no autorizado" });
-//     }
-
-//     await applicant.update(updatedData);
-//     res.json(applicant);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Error al actualizar currículum por ID" });
-//   }
-// }
-
-
-// // Controlador para eliminar un currículum por su ID
-// exports.deleteApplicantById = async (req, res) => {
-//   const id = req.params.id;
-
-//   try {
-//     const applicant = await Applicant.findByPk(id);
-//     if (!applicant) {
-//       return res.status(404).json({ error: "Currículum no encontrado" });
-//     }
-
-//     // Verifica que el usuario actual sea el propietario del currículum
-//     if (applicant.utenteId !== req.utente.id) {
-//       return res.status(403).json({ error: "Acceso no autorizado" });
-//     }
-
-//     await applicant.destroy();
-//     res.json({ message: "Currículum eliminado con éxito" });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Error al eliminar currículum por ID" });
-//   }
-// }
 
 //obtene por id
 exports.getApplicantById = async (req, res) => {

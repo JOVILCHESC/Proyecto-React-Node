@@ -74,7 +74,12 @@ const UserDashboard = () => {
   useEffect(() => {
     axios.get('http://localhost:3000/requestReplacement')
       .then((response) => {
-        setRequests(response.data);
+        console.log(response.data);
+        if (Array.isArray(response.data)) {
+          setRequests(response.data);
+        } else {
+          console.error('La respuesta del servidor no es un array:', response.data);
+        }
       })
       .catch((error) => {
         console.error('Error al obtener las solicitudes de reemplazo en el frontend:', error);

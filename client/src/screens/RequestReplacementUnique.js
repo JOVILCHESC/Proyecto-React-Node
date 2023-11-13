@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import styles from './CVUnique.module.css';
 
-const RequestReplacementUnique = () => {
+const RequestReplacementUnique = ({ utenteId, applicantId }) => {
   const { id } = useParams();
+
   const [uniqueRequest, setUniqueRequest] = useState({});
+  
   const [solicitudEnviada, setSolicitudEnviada] = useState(false);
   const [applicantAssociated, setApplicantAssociated] = useState(false);
 
@@ -13,9 +15,7 @@ const RequestReplacementUnique = () => {
     axios.get(`http://localhost:3000/requestReplacement/byID/${id}`)
       .then((response) => {
         setUniqueRequest(response.data);
-        // Verificar si el currículum ya está asociado a esta solicitud de reemplazo
-        // Puedes hacer una solicitud al servidor para verificar esta asociación aquí
-        // Si el currículum está asociado, actualiza el estado 'applicantAssociated' a true
+        console.log("Solicitud de reemplazo cargada con éxito:", response.data);
       })
       .catch((error) => {
         console.error('Error al mostrar las solicitudes de reemplazo:', error);
@@ -24,11 +24,13 @@ const RequestReplacementUnique = () => {
 
   const handlePostularClick = () => {
     if (!solicitudEnviada) {
-      // Envía la solicitud al servidor para asociar el currículum a la solicitud de reemplazo
-      console.log("Botón de Postular clicado");
-      axios.post(`http://localhost:3000/postulate/${id}/apply`)
+      if (!utenteId || !applicantId) {
+        console.error('Error: utenteId o applicantId no están definidos correctamente');
+        return;
+      }
+
+      axios.post(`http://localhost:3000/postulate/${id}/apply`, { utenteId, applicantId })
         .then((response) => {
-          // Cambia el estado para mostrar "Solicitud Enviada" y habilitar la indicación de asociación
           console.log("Respuesta exitosa al postularse:", response.data);
           setSolicitudEnviada(true);
           setApplicantAssociated(true);
