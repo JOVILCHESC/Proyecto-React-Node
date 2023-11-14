@@ -3,15 +3,15 @@ const router = express.Router();
 const applicantController = require("../controllers/applicantController");
 // const validationMiddleware = require('../middlewares/validationMiddleware');
 const {validateToken} = require('../middlewares/newAuthMiddleware');
-const { uploadPdf } = require('../controllers/applicantController');
+// const { uploadPdf } = require('../controllers/applicantController');
 
 
 // Ruta para registrar un nuevo solicitante/SUBIR NUEVO CURRICULUM(original)
 // router.post("/", validateToken, uploadPdf, applicantController.createApplicant);
 // ...
-router.post("/", uploadPdf, validateToken, applicantController.createApplicant);
-
-
+router.post("/", validateToken, applicantController.createApplicant);
+//ruta para el edit
+router.get('/applicant/edit', applicantController.getApplicantForEdit);
 // Ruta para obtener un currículum por su ID (se requiere autenticación(mas especifico))
 router.get("/obtainByID/:id", applicantController.getApplicantById);
 

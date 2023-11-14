@@ -1,38 +1,8 @@
-// const { Applicant } = require("../models");
-
-// exports.createApplicant = async (req, res) => {
-//   const userId = req.user.id;
-//   const applicantData = req.body;
-
-//   try {
-//     // Verificar si el usuario ya tiene un currículum
-//     const existingApplicant = await Applicant.findOne({ where: { utenteId: userId } });
-
-//     if (existingApplicant) {
-//       // El usuario ya tiene un currículum, actualízalo en lugar de crear uno nuevo
-//       await existingApplicant.update(applicantData);
-//       return res.status(200).json(existingApplicant);
-//     }
-
-//     // Si el usuario no tiene un currículum, crea uno
-//     const newApplicant = await Applicant.create({ ...applicantData, utenteId: userId });
-//     res.status(201).json(newApplicant);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Error al registrar currículum" });
-//   }
-// };
 const { Applicant } = require("../models");
-const multer = require('multer');
-
-// Configurar multer para manejar la carga de archivos
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
 
 exports.createApplicant = async (req, res) => {
   const userId = req.user.id;
   const applicantData = req.body;
-  const pdfFile = req.file; // Archivo PDF adjunto
 
   try {
     // Verificar si el usuario ya tiene un currículum
@@ -45,14 +15,7 @@ exports.createApplicant = async (req, res) => {
     }
 
     // Si el usuario no tiene un currículum, crea uno
-    const newApplicantData = { ...applicantData, utenteId: userId };
-
-    if (pdfFile) {
-      // Si hay un archivo PDF adjunto, guárdalo en el currículum
-      newApplicantData.cvFile = pdfFile.buffer.toString('base64');
-    }
-
-    const newApplicant = await Applicant.create(newApplicantData);
+    const newApplicant = await Applicant.create({ ...applicantData, utenteId: userId });
     res.status(201).json(newApplicant);
   } catch (error) {
     console.error(error);
@@ -60,8 +23,26 @@ exports.createApplicant = async (req, res) => {
   }
 };
 
-// Middleware para manejar la carga de archivos PDF
-exports.uploadPdf = upload.single('cvFile');
+
+exports.getApplicantForEdit = async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    // Obtener el currículum del usuario
+    const existingApplicant = await Applicant.findOne({ where: { utenteId: userId } });
+
+    if (existingApplicant) {
+      // Devolver los datos del currículum para la edición
+      return res.status(200).json(existingApplicant);
+    }
+
+    // Si el usuario no tiene un currículum, puedes manejarlo según tus necesidades
+    res.status(404).json({ error: "Currículum no encontrado" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error al obtener currículum para editar" });
+  }
+};
 
 
 // Controlador para obtener todos los solicitantes
