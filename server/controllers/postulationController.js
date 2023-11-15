@@ -1,4 +1,7 @@
 const { Postulation, Applicant, RequestReplacement, Utente } = require('../models');
+const { Sequelize } = require('sequelize');
+
+// Resto del código...
 
 exports.postular = async (req, res) => {
   try {
@@ -139,49 +142,226 @@ exports.postular = async (req, res) => {
 
  
 
+// // OBTENER LISTAS
+// exports.obtenerUsuariosPonderados = async (req, res) => {
+//   try {
+//     const requestId = req.params.requestId;
+
+//     // Obtén la lista de postulantes y calcula la ponderación para cada uno
+//     const postulantes = await Postulation.findAll({
+//       where: {
+//         requestId: requestId,
+//       },
+//       include: [
+//         {
+//           model: Applicant,
+//           attributes: ['yearsExperience', 'education'],
+//         },
+//         {
+//           model: RequestReplacement,
+//           attributes: ['yearsExperience'],
+//         },
+//         {
+//           model: Utente, // Incluye el modelo Utente
+//           attributes: ['username'], // Agrega los campos que necesitas
+//         },
+//       ],
+//     });
+
+//     // Calcula la ponderación para cada postulante y actualiza la lista
+//     const postulacionesActualizadas = postulantes.map((postulante) => ({
+//       id: postulante.id,
+//       totalScore: postulante.totalScore, // Asegúrate de incluir otros campos necesarios
+//       ponderacion: calcularPonderacion(postulante.Applicant, postulante.RequestReplacement),
+//       usuarioDetallado: postulante.Utente, 
+//     }));
+
+//     // Actualiza todas las postulaciones en la base de datos
+//     await Postulation.bulkCreate(postulacionesActualizadas, {
+//       updateOnDuplicate: ['ponderacion'], // Actualiza solo el campo 'ponderacion'
+//     });
+
+//     // Obten la lista ordenada por ponderación de mayor a menor
+//     const postulantesOrdenados = postulantes.sort((a, b) => b.ponderacion - a.ponderacion);
+
+//     res.status(200).json(postulantesOrdenados);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Error al obtener la lista de usuarios ponderados' });
+//   }
+// };
+
+// // Función para calcular la ponderación
+// const calcularPonderacion = (applicant, requestReplacement) => {
+//   let ponderacion = 0;
+
+//   if (!applicant || !requestReplacement) {
+//     // Maneja el caso en que Applicant o RequestReplacement es null
+//     console.error("Applicant o RequestReplacement es null");
+//     return ponderacion;
+//   }
+
+//   // Asigna valores a los campos puntuables según tus criterios
+//   const educationScore = getEducationScore(applicant.education);
+//   const applicantExperience = applicant.yearsExperience;
+//   const requestExperience = requestReplacement.yearsExperience;
+//   const experienceScore = getExperienceScore(applicantExperience, requestExperience);
+
+//   // Puedes ajustar los pesos y la lógica según tus necesidades
+//   ponderacion = educationScore * 0.5 + experienceScore * 0.5;
+
+//   if (isNaN(ponderacion)) {
+//     return 0;
+//   }
+
+//   return ponderacion;
+// };
+
+// // Función para asignar puntajes según niveles de educación
+// const getEducationScore = (education) => {
+//   if (education === 'Media') {
+//     return 3; // Puntaje para educación media
+//   } else if (education === 'Universidad') {
+//     return 5; // Puntaje para educación universitaria
+//   } else if (education === 'Posgrado') {
+//     return 10; // Puntaje para posgrado
+//   } else {
+//     return 0; // Otros casos
+//   }
+// };
+
+// // Función para asignar puntajes según la experiencia del solicitante en comparación con la requerida
+// const getExperienceScore = (applicantExperience, requiredExperience) => {
+//   if (applicantExperience >= requiredExperience) {
+//     return 10; // Puntaje máximo si la experiencia del solicitante es igual o mayor que la requerida
+//   } else {
+//     // Puedes ajustar la lógica para asignar puntajes intermedios según tus criterios
+//     return 5; // Puntaje intermedio si la experiencia del solicitante es menor que la requerida
+//   }
+// };
+
+
+
+
+///////////////
+// FUNCIONES DE EVALUACIÓN DE CANDIDATOS
+// // OBTENER LISTAS
+// exports.obtenerUsuariosPonderados = async (req, res) => {
+//   try {
+//     const requestId = req.params.requestId;
+
+//     // Obtén todos los currículos
+//     const curriculums = await Applicant.findAll({
+//       include: [
+//         {
+//           model: Utente,
+//           attributes: ['username'], // Agrega los campos que necesitas
+//         },
+//       ],
+//     });
+
+//     // Obtén la solicitud de reemplazo específica
+//     const solicitud = await RequestReplacement.findByPk(requestId);
+
+//     // Calcula la ponderación para cada currículo y crea la lista ponderada
+//     const curriculumsPonderados = curriculums.map((curriculum) => ({
+//       id: curriculum.id,
+//       ponderacion: calcularPonderacion(curriculum, solicitud),
+//       usuarioDetallado: curriculum.Utente,
+//     }));
+
+//     // Ordena la lista por ponderación de mayor a menor
+//     const curriculumsOrdenados = curriculumsPonderados.sort((a, b) => b.ponderacion - a.ponderacion);
+
+//     res.status(200).json(curriculumsOrdenados);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Error al obtener la lista de usuarios ponderados' });
+//   }
+// };
+
+// // Función para calcular la ponderación
+// const calcularPonderacion = (applicant, requestReplacement) => {
+//   let ponderacion = 0;
+
+//   if (!applicant || !requestReplacement) {
+//     console.error("Applicant o RequestReplacement es null");
+//     return ponderacion;
+//   }
+
+//   // Asigna valores a los campos puntuables según tus criterios
+//   const educationScore = getEducationScore(applicant.education);
+//   const applicantExperience = applicant.yearsExperience;
+//   const requestExperience = requestReplacement.yearsExperience;
+//   const experienceScore = getExperienceScore(applicantExperience, requestExperience);
+
+//   // Puedes ajustar los pesos y la lógica según tus necesidades
+//   ponderacion = educationScore * 0.5 + experienceScore * 0.5;
+
+//   if (isNaN(ponderacion)) {
+//     return 0;
+//   }
+
+//   return ponderacion;
+// };
+
+// // Resto de las funciones permanecen sin cambios
+// // Función para asignar puntajes según niveles de educación
+// const getEducationScore = (education) => {
+//   if (education === 'Media') {
+//     return 3; // Puntaje para educación media
+//   } else if (education === 'Universidad') {
+//     return 5; // Puntaje para educación universitaria
+//   } else if (education === 'Posgrado') {
+//     return 10; // Puntaje para posgrado
+//   } else {
+//     return 0; // Otros casos
+//   }
+// };
+
+// // Función para asignar puntajes según la experiencia del solicitante en comparación con la requerida
+// const getExperienceScore = (applicantExperience, requiredExperience) => {
+//   if (applicantExperience >= requiredExperience) {
+//     return 10; // Puntaje máximo si la experiencia del solicitante es igual o mayor que la requerida
+//   } else {
+//     // Puedes ajustar la lógica para asignar puntajes intermedios según tus criterios
+//     return 5; // Puntaje intermedio si la experiencia del solicitante es menor que la requerida
+//   }
+// };
 // OBTENER LISTAS
 exports.obtenerUsuariosPonderados = async (req, res) => {
   try {
     const requestId = req.params.requestId;
 
-    // Obtén la lista de postulantes y calcula la ponderación para cada uno
-    const postulantes = await Postulation.findAll({
-      where: {
-        requestId: requestId,
-      },
+    // Obtén todos los currículos con información de Utente y RequestReplacement
+    const curriculums = await Applicant.findAll({
       include: [
         {
-          model: Applicant,
-          attributes: ['yearsExperience', 'education'],
+          model: Utente,
+          attributes: ['id', 'username'], // Agrega los campos que necesitas
         },
         {
           model: RequestReplacement,
-          attributes: ['yearsExperience'],
-        },
-        {
-          model: Utente, // Incluye el modelo Utente
-          attributes: ['username'], // Agrega los campos que necesitas
+          attributes: ['yearsExperience'], // Agrega los campos necesarios para calcular la ponderación
         },
       ],
     });
+    console.log('Datos de curriculums:', curriculums);
 
-    // Calcula la ponderación para cada postulante y actualiza la lista
-    const postulacionesActualizadas = postulantes.map((postulante) => ({
-      id: postulante.id,
-      totalScore: postulante.totalScore, // Asegúrate de incluir otros campos necesarios
-      ponderacion: calcularPonderacion(postulante.Applicant, postulante.RequestReplacement),
-      usuarioDetallado: postulante.Utente, 
+    // Obtén la solicitud de reemplazo específica
+    const solicitud = await RequestReplacement.findByPk(requestId);
+
+    // Calcula la ponderación para cada currículo y crea la lista ponderada
+    const curriculumsPonderados = curriculums.map((curriculum) => ({
+      id: curriculum.id,
+      ponderacion: calcularPonderacion(curriculum, solicitud),
+      usuarioDetallado: curriculum.Utente,
     }));
 
-    // Actualiza todas las postulaciones en la base de datos
-    await Postulation.bulkCreate(postulacionesActualizadas, {
-      updateOnDuplicate: ['ponderacion'], // Actualiza solo el campo 'ponderacion'
-    });
+    // Ordena la lista por ponderación de mayor a menor
+    const curriculumsOrdenados = curriculumsPonderados.sort((a, b) => b.ponderacion - a.ponderacion);
 
-    // Obten la lista ordenada por ponderación de mayor a menor
-    const postulantesOrdenados = postulantes.sort((a, b) => b.ponderacion - a.ponderacion);
-
-    res.status(200).json(postulantesOrdenados);
+    res.status(200).json(curriculumsOrdenados);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al obtener la lista de usuarios ponderados' });
@@ -189,11 +369,11 @@ exports.obtenerUsuariosPonderados = async (req, res) => {
 };
 
 // Función para calcular la ponderación
+// Función para calcular la ponderación
 const calcularPonderacion = (applicant, requestReplacement) => {
   let ponderacion = 0;
 
   if (!applicant || !requestReplacement) {
-    // Maneja el caso en que Applicant o RequestReplacement es null
     console.error("Applicant o RequestReplacement es null");
     return ponderacion;
   }
@@ -204,8 +384,15 @@ const calcularPonderacion = (applicant, requestReplacement) => {
   const requestExperience = requestReplacement.yearsExperience;
   const experienceScore = getExperienceScore(applicantExperience, requestExperience);
 
+  // Nueva lógica para comparar destrezas destacables y seniority
+  const destacableHability = applicant.destacableHability;
+  const seniority = requestReplacement.seniority;
+
+  // Otorga puntos según la coincidencia
+  const habilityScore = getHabilityScore(destacableHability, seniority);
+
   // Puedes ajustar los pesos y la lógica según tus necesidades
-  ponderacion = educationScore * 0.5 + experienceScore * 0.5;
+  ponderacion = educationScore * 0.5 + experienceScore * 0.5 + habilityScore;
 
   if (isNaN(ponderacion)) {
     return 0;
@@ -214,6 +401,14 @@ const calcularPonderacion = (applicant, requestReplacement) => {
   return ponderacion;
 };
 
+// Función para asignar puntajes según destrezas destacables y seniority
+const getHabilityScore = (destacableHability, seniority) => {
+  // Si son iguales, otorga 10 puntos, de lo contrario, otorga 5 puntos
+  return destacableHability === seniority ? 10 : 5;
+};
+
+
+// Resto de las funciones permanecen sin cambios
 // Función para asignar puntajes según niveles de educación
 const getEducationScore = (education) => {
   if (education === 'Media') {

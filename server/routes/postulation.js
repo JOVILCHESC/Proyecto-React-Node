@@ -9,7 +9,10 @@ const { validateToken } = require('../middlewares/passValidation');
 router.post('/solicitud/:requestId/postular', validateToken, postulationController.postular);
 
 // Ruta para obtener la lista de usuarios ponderados
-router.get('/obtenerUsuariosPonderados/:requestId', postulationController.obtenerUsuariosPonderados);
+// router.get('/obtenerUsuariosPonderados/:requestId', postulationController.obtenerUsuariosPonderados);
+
+// Ruta para obtener la lista de usuarios por solicitud
+router.get('/solicitud/:requestId', postulationController.obtenerUsuariosPonderados);
 
 
 module.exports = router;

@@ -77,6 +77,7 @@
 
 
 import React from "react";
+import axios from 'axios';
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -88,41 +89,43 @@ function Registration() {
     username: "",
     password: "",
     role: "",
-    // email: "",
-    // dateBorn: "",
-    // rut: "",
+    email: "",
+    dateBorn: "",
+    rut: "",
   };
 
   const validationSchema = Yup.object().shape({
     username: Yup.string().min(3).max(15).required(),
     password: Yup.string().min(4).max(20).required(),
     role: Yup.string().required(),
-    // email: Yup.string().email("Invalid email").required(),
-    // dateBorn: Yup.date()
-    // .nullable()
-    // .required("Este campo es requerido")
-    // .test(
-    //   "is-adult",
-    //   "Debes ser mayor de 18 años",
-    //   function (value) {
-    //     const currentDate = new Date();
-    //     const birthDate = new Date(value);
-    //     const age = currentDate.getFullYear() - birthDate.getFullYear();
+    email: Yup.string().email("Invalid email").required(),
+    dateBorn: Yup.date()
+    .nullable()
+    .required("Este campo es requerido")
+    .test(
+      "is-adult",
+      "Debes ser mayor de 18 años",
+      function (value) {
+        const currentDate = new Date();
+        const birthDate = new Date(value);
+        const age = currentDate.getFullYear() - birthDate.getFullYear();
 
-    //     // Verifica si el usuario tiene al menos 18 años
-    //     return age >= 18;
-    //   }
-    // ),
-    // rut: Yup.string(),
+        // Verifica si el usuario tiene al menos 18 años
+        return age >= 18;
+      }
+    ),
+    rut: Yup.string(),
   });
 
   const navigate = useNavigate();
 
   const onSubmit = (data) => {
-    // Lógica de envío del formulario
-    console.log(data);
-    navigate("/");
-  };
+          axios.post("http://localhost:3000/auth/register", data).then(() => {
+            // Registro exitoso, redirige al usuario
+            console.log(data);
+            navigate("/"); // Redirige al usuario a la página de inicio de sesión
+          });
+        };
 
   return (
     <Container>

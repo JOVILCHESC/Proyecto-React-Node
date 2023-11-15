@@ -144,8 +144,8 @@ function App() {
               {/* <Route path="/ponderation-list/:requestId" element={<PonderationList />} /> */}
               <Route path="/postulation" element={<Postulation />} />
               <Route path="/ViewCv" element={<ViewCv />} />
-              <Route path="/ponderation-list/:requestId" element={<PonderationList />} />
-
+              {/* <Route path="/ponderation-list/:requestId" element={<PonderationList />} /> */}
+              <Route path="/solicitud/:requestId" element={<PonderationList />} />
             </Routes>
           </div>
         </Router>

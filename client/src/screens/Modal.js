@@ -126,7 +126,7 @@ const UpdateRequestModal = ({ show, handleClose, handleUpdateRequest, selectedRe
             />
           </Form.Group>
           <Form.Group controlId="seniority">
-            <Form.Label>Seniority</Form.Label>
+            <Form.Label>Habilidad destacable</Form.Label>
             <Form.Control
               type="text"
               placeholder="Ingrese el seniority"

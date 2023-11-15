@@ -18,7 +18,7 @@ const initialValues = {
   languageSkills: 'Ingles',
   certifications: '',
   technicalSkills: 'Trabajo en equipo',
-  // cvFile: '', // Comentado para eliminar la implementación del archivo de curriculum
+  cvFile: '', // Comentado para eliminar la implementación del archivo de curriculum
 };
 
 const validationSchema = Yup.object().shape({
@@ -149,7 +149,7 @@ const CvForm = () => {
                 <ErrorMessage name="languageSkills" component="span" className={styles.error} />
               </div>
               <div className={styles.formRow}>
-                <label>Certifications:</label>
+                <label>Certificaciones:</label>
                 <Field
                   className={styles.input}
                   autoComplete="off"
@@ -168,19 +168,17 @@ const CvForm = () => {
                 </Field>
                 <ErrorMessage name="technicalSkills" component="span" className={styles.error} />
               </div>
-              {/* <div className={styles.formRow}>
-                <label>Adjuntar CV (PDF):</label>
+              <div className={styles.formRow}>
+                <label>Habilidad destacable:</label>
                 <Field
-                  type="file"
-                  id="inputCreateApplicant"
-                  name="cvFile"
-                  accept=".pdf"
-                  onChange={(event) => {
-                    setFieldValue("cvFile", event.currentTarget.files[0] || '');
-                  }}
+                  className={styles.input}
+                  autoComplete="off"
+                  id="inputDestacableHability"
+                  name="destacableHability"
+                  placeholder="( Programar...)"
                 />
-                <ErrorMessage name="cvFile" component="span" className={styles.error} />
-              </div> */}
+                <ErrorMessage name="destacableHability" component="span" className={styles.error} />
+              </div>
               <div className={styles.formRow}>
                 <button type="submit" className={styles.submitButton}> Subir Registro de CV</button>
               </div>

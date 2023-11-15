@@ -118,7 +118,7 @@ if (authState.role === 'admin') {
             <ErrorMessage name="ubicacion" component="div" />
           </div>
           <div className={styles.formRow}>
-            <label>Seniority:</label>
+            <label>Habilidad obligatoria:</label>
             <Field className={styles.input}  type="text" id="inputSeniority" name="seniority" />
             <ErrorMessage name="seniority" component="div" />
           </div>

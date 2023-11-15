@@ -323,18 +323,40 @@ const AdminHome = () => {
       });
   };
 
+  // const handleVerLista = (requestId) => {
+  //   axios
+  //     .get(`http://localhost:3000/postulate/obtenerUsuariosPonderados/${requestId}`)
+  //     .then((response) => {
+  //       setPostulantes(response.data);
+  //       console.log('servidor: ', response.data);
+  //       navigate(`/ponderation-list/${requestId}`);
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error al obtener los postulantes:', error);
+  //     });
+  // };
   const handleVerLista = (requestId) => {
     axios
-      .get(`http://localhost:3000/postulate/obtenerUsuariosPonderados/${requestId}`)
+      .get(`http://localhost:3000/postulate/solicitud/${requestId}`)
       .then((response) => {
         setPostulantes(response.data);
         console.log('servidor: ', response.data);
-        navigate(`/ponderation-list/${requestId}`);
+        navigate(`/solicitud/${requestId}`);
       })
       .catch((error) => {
-        console.error('Error al obtener los postulantes:', error);
+        if (error.response && error.response.status === 404) {
+          console.error('Solicitud de reemplazo no encontrada');
+          // Puedes manejar la lógica de error aquí (por ejemplo, mostrar un mensaje al usuario)
+        } else {
+          console.error('Error al obtener los postulantes:', error);
+        }
       });
   };
+  
+  
+  
+  
+  
 
   if (isLoading) {
     return (
@@ -372,7 +394,7 @@ const AdminHome = () => {
                     <strong>Ubicación:</strong> {value.ubicacion}
                   </div>
                   <div>
-                    <strong>Seniority:</strong> {value.seniority}
+                    <strong>Habilidad destacable:</strong> {value.seniority}
                   </div>
                   <div>
                     <strong>Duración del Trabajo:</strong> {value.duracionTrabajo}
